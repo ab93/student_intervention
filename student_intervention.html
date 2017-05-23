@@ -277,14 +277,14 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Calculate number of students</span>
 <span class="n">n_students</span> <span class="o">=</span> <span class="n">student_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="c1"># TODO: Calculate number of features</span>
-<span class="n">n_features</span> <span class="o">=</span> <span class="n">student_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="n">student_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="c1"># TODO: Calculate passing students</span>
 <span class="n">n_passed</span> <span class="o">=</span> <span class="n">student_data</span><span class="p">[</span><span class="n">student_data</span><span class="p">[</span><span class="s1">&#39;passed&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -300,7 +300,7 @@ div#notebook {
 <span class="k">print</span> <span class="s2">&quot;Number of features: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_features</span><span class="p">)</span>
 <span class="k">print</span> <span class="s2">&quot;Number of students who passed: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_passed</span><span class="p">)</span>
 <span class="k">print</span> <span class="s2">&quot;Number of students who failed: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_failed</span><span class="p">)</span>
-<span class="k">print</span> <span class="s2">&quot;Graduation rate of the class: {:.2f}%&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grad_rate</span><span class="p">)</span>
+<span class="k">print</span> <span class="s2">&quot;Graduation rate of the class: {:.2f}%&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grad_rate</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -314,10 +314,10 @@ div#notebook {
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total number of students: 395
-Number of features: 31
+Number of features: 30
 Number of students who passed: 265
 Number of students who failed: 130
-Graduation rate of the class: 0.67%
+Graduation rate of the class: 67.09%
 </pre>
 </div>
 </div>
@@ -987,7 +987,11 @@ F1 score for test set: 0.7820.
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer: </strong> The final model is determined by training the algorithm over the training data. The training data consists of the feature variables and the target labels (pass/no pass). The model learns from this training data and fits itself according to the problem. This trained model is then applied to new unseen (test) data in order to predict whether the new instance is classified as pass or no pass.</p>
+<p><strong>Answer: </strong> The final model is determined by training the algorithm over the training data. The training data consists of the feature variables (like other's/father's occupation, sex, age) and the target labels (i.e. pass/fail). The model learns from this training data and fits itself according to the problem. This particular algorithm that we have chosen, that is the Support Vector Machine learns the best decision boundary for the problem. That is, it selects the best hyperplane in the feature space which divides the pass and fail examples.</p>
+<p><img src="Selection_228.png" alt="title"></p>
+<p>Consider the image above. For simplicity, let us consider that we only have two things to consider while determining whether the student will pass or fail. Let us suppose that the horizontal axis represents the age and the vertical axis represents the family relation scale. The blue circles represent that the student has passed and the red square denote that those students have failed. Our algorithm learns on the training data to determine which of those green lines best categorize the students as pass or fail.</p>
+<p>This trained model is then applied to new unseen (test) data in order to predict whether the new student is classified as pass or no pass. In this phase, our trained model is applied to the new instances, and predicted according to where the student lies in the graph with respect to the decision boundary (green line). Thus from the image above, a new student is classified as pass or fail depending upon which side of the green line they lie.</p>
+<p>Also, not all problems can be separated by a straight line or a plane, like in the above figure. For this purpose, SVM employs a kernel trick which enables the separating boundary to be something non-linear, e.g. a circle or something which is not regular. For this problem we are using the RBF or the Gaussian kernel to learn some more complexities in our data.</p>
 
 </div>
 </div>
@@ -1018,7 +1022,7 @@ F1 score for test set: 0.7820.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Import &#39;GridSearchCV&#39; and &#39;make_scorer&#39;</span>
@@ -1060,18 +1064,8 @@ F1 score for test set: 0.7820.
 
 
 <div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>/home/avik/anaconda/lib/python2.7/site-packages/sklearn/cross_validation.py:44: DeprecationWarning: This module was deprecated in version 0.18 in favor of the model_selection module into which all the refactored classes and functions are moved. Also note that the interface of the new CV iterators are different from that of this module. This module will be removed in 0.20.
-  &quot;This module will be removed in 0.20.&quot;, DeprecationWarning)
-/home/avik/anaconda/lib/python2.7/site-packages/sklearn/grid_search.py:43: DeprecationWarning: This module was deprecated in version 0.18 in favor of the model_selection module into which all the refactored classes and functions are moved. This module will be removed in 0.20.
-  DeprecationWarning)
-</pre>
-</div>
-</div>
-
-<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Made predictions in 0.0047 seconds.
+<pre>Made predictions in 0.0051 seconds.
 Tuned model has a training F1 score of 0.8323.
 Made predictions in 0.0018 seconds.
 Tuned model has a testing F1 score of 0.7945.
